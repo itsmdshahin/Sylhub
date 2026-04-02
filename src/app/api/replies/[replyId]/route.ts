@@ -1,13 +1,18 @@
 //src/app/api/posts/[postId]/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/src/server/auth/current-user";
 import { supabaseAdmin } from "@/src/server/db/supabase-admin";
 import { updateReplySchema } from "@/src/server/validators/engagement";
 
+// =========================
+// PATCH REPLY
+// =========================
 export async function PATCH(
-  req: Request,
-  { params }: { params: { replyId: string } }
+  req: NextRequest,
+  context: { params: Promise<{ replyId: string }> }
 ) {
+  const { replyId } = await context.params;
+
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -21,7 +26,7 @@ export async function PATCH(
   const { data: reply, error: fetchError } = await supabaseAdmin
     .from("replies")
     .select("id, user_id")
-    .eq("id", params.replyId)
+    .eq("id", replyId)
     .maybeSingle();
 
   if (fetchError) {
@@ -39,7 +44,7 @@ export async function PATCH(
   const { data, error } = await supabaseAdmin
     .from("replies")
     .update({ content: parsed.data.content })
-    .eq("id", params.replyId)
+    .eq("id", replyId)
     .select("id, content, created_at, user_id, comment_id")
     .single();
 
@@ -60,10 +65,15 @@ export async function PATCH(
   });
 }
 
+// =========================
+// DELETE REPLY
+// =========================
 export async function DELETE(
-  req: Request,
-  { params }: { params: { replyId: string } }
+  req: NextRequest,
+  context: { params: Promise<{ replyId: string }> }
 ) {
+  const { replyId } = await context.params;
+
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -72,7 +82,7 @@ export async function DELETE(
   const { data: reply, error: fetchError } = await supabaseAdmin
     .from("replies")
     .select("id, user_id")
-    .eq("id", params.replyId)
+    .eq("id", replyId)
     .maybeSingle();
 
   if (fetchError) {
@@ -90,7 +100,7 @@ export async function DELETE(
   const { error } = await supabaseAdmin
     .from("replies")
     .delete()
-    .eq("id", params.replyId);
+    .eq("id", replyId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

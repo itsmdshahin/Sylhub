@@ -1,12 +1,19 @@
-import { NextResponse } from "next/server";
+//src/app/api/comments/[commentId]/route.ts
+
+import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/src/server/auth/current-user";
 import { supabaseAdmin } from "@/src/server/db/supabase-admin";
 import { updateCommentSchema } from "@/src/server/validators/engagement";
 
+// =========================
+// PATCH (UPDATE COMMENT)
+// =========================
 export async function PATCH(
-  req: Request,
-  { params }: { params: { commentId: string } }
+  req: NextRequest,
+  context: { params: Promise<{ commentId: string }> }
 ) {
+  const { commentId } = await context.params;
+
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -20,7 +27,7 @@ export async function PATCH(
   const { data: comment, error: fetchError } = await supabaseAdmin
     .from("comments")
     .select("id, user_id")
-    .eq("id", params.commentId)
+    .eq("id", commentId)
     .maybeSingle();
 
   if (fetchError) {
@@ -38,7 +45,7 @@ export async function PATCH(
   const { data, error } = await supabaseAdmin
     .from("comments")
     .update({ content: parsed.data.content })
-    .eq("id", params.commentId)
+    .eq("id", commentId)
     .select("id, content, created_at, user_id, post_id")
     .single();
 
@@ -59,10 +66,15 @@ export async function PATCH(
   });
 }
 
+// =========================
+// DELETE COMMENT
+// =========================
 export async function DELETE(
-  req: Request,
-  { params }: { params: { commentId: string } }
+  req: NextRequest,
+  context: { params: Promise<{ commentId: string }> }
 ) {
+  const { commentId } = await context.params;
+
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -71,7 +83,7 @@ export async function DELETE(
   const { data: comment, error: fetchError } = await supabaseAdmin
     .from("comments")
     .select("id, user_id")
-    .eq("id", params.commentId)
+    .eq("id", commentId)
     .maybeSingle();
 
   if (fetchError) {
@@ -89,7 +101,7 @@ export async function DELETE(
   const { error } = await supabaseAdmin
     .from("comments")
     .delete()
-    .eq("id", params.commentId);
+    .eq("id", commentId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

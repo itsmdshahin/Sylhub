@@ -1,13 +1,19 @@
-//src/app/api/posts/[postId]/route.ts
-import { NextResponse } from "next/server";
+// src/app/api/posts/[postId]/route.ts
+
+import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/src/server/auth/current-user";
 import { supabaseAdmin } from "@/src/server/db/supabase-admin";
 import { updatePostSchema } from "@/src/server/validators/engagement";
 
+// =========================
+// PATCH POST
+// =========================
 export async function PATCH(
-  req: Request,
-  { params }: { params: { postId: string } }
+  req: NextRequest,
+  context: { params: Promise<{ postId: string }> }
 ) {
+  const { postId } = await context.params;
+
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -15,6 +21,7 @@ export async function PATCH(
 
   const body = await req.json();
   const parsed = updatePostSchema.safeParse(body);
+
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid post data" }, { status: 400 });
   }
@@ -22,7 +29,7 @@ export async function PATCH(
   const { data: post, error: fetchError } = await supabaseAdmin
     .from("posts")
     .select("id, user_id")
-    .eq("id", params.postId)
+    .eq("id", postId)
     .maybeSingle();
 
   if (fetchError) {
@@ -38,8 +45,15 @@ export async function PATCH(
   }
 
   const updateData: Record<string, any> = {};
-  if (parsed.data.content !== undefined) updateData.content = parsed.data.content;
-  if (parsed.data.imageUrl !== undefined) updateData.image_url = parsed.data.imageUrl;
+
+  if (parsed.data.content !== undefined) {
+    updateData.content = parsed.data.content;
+  }
+
+  if (parsed.data.imageUrl !== undefined) {
+    updateData.image_url = parsed.data.imageUrl;
+  }
+
   if (parsed.data.visibility !== undefined) {
     updateData.visibility = parsed.data.visibility.toLowerCase();
   }
@@ -47,7 +61,7 @@ export async function PATCH(
   const { data, error } = await supabaseAdmin
     .from("posts")
     .update(updateData)
-    .eq("id", params.postId)
+    .eq("id", postId)
     .select("id, content, image_url, visibility, created_at, user_id")
     .single();
 
@@ -69,10 +83,15 @@ export async function PATCH(
   });
 }
 
+// =========================
+// DELETE POST
+// =========================
 export async function DELETE(
-  req: Request,
-  { params }: { params: { postId: string } }
+  req: NextRequest,
+  context: { params: Promise<{ postId: string }> }
 ) {
+  const { postId } = await context.params;
+
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -81,7 +100,7 @@ export async function DELETE(
   const { data: post, error: fetchError } = await supabaseAdmin
     .from("posts")
     .select("id, user_id")
-    .eq("id", params.postId)
+    .eq("id", postId)
     .maybeSingle();
 
   if (fetchError) {
@@ -99,7 +118,7 @@ export async function DELETE(
   const { error } = await supabaseAdmin
     .from("posts")
     .delete()
-    .eq("id", params.postId);
+    .eq("id", postId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
