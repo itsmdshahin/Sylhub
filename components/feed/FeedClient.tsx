@@ -1,6 +1,9 @@
+//src/components/feed/FeedClient.tsx
+
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import CreatePost from "./CreatePost"; 
 
 type UserLite = {
   id: string;
@@ -194,6 +197,16 @@ export default function FeedClient({
   return (
     <div className="feed-content">
 
+      <CreatePost
+        createPost={createPost}
+        content={content}
+        setContent={setContent}
+        currentUserName={currentUserName}
+        setImageFile={setImageFile}
+        visibility={visibility}
+        setVisibility={setVisibility}
+        busy={busy}
+      />
       {/* CREATE POST */}
       <form onSubmit={createPost} className="card composer">
         <textarea

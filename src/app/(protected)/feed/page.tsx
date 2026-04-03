@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/src/server/auth/current-user";
 import { supabaseAdmin } from "@/src/server/db/supabase-admin";
 import FeedClient from "@/components/feed/FeedClient";
+import Stories from "@/components/feed/Stories";
 
 type UserLite = {
   id: string;
@@ -172,5 +173,9 @@ export default async function FeedPage() {
     };
   });
 
-  return <FeedClient currentUser={user} initialPosts={posts} />;
+  return(
+    <> 
+    <FeedClient currentUser={user} initialPosts={posts} />
+    </>
+  ); 
 }

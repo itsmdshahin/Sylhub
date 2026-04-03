@@ -9,8 +9,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Buddy Script",
-  description: "Social feed app built with Next.js and Supabase",
+  title: "SYLHUB",
+  description: "Largest Sylheti Social Community Hub",
 };
 
 export default function RootLayout({

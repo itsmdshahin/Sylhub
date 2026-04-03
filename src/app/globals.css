@@ -263,14 +263,7 @@ img {
   box-shadow: var(--shadow);
 }
 
-.composer {
-  padding: 18px;
-}
-
-.composer textarea {
-  min-height: 108px;
-  resize: vertical;
-}
+ 
 
 .feed-grid {
   display: grid;
@@ -323,13 +316,7 @@ img {
 .dropdown-item:hover {
   background: #f1f5f9;
 }
-
-.post-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 14px;
-  flex-wrap: wrap;
-}
+ 
 
 .icon-btn {
   border: 1px solid var(--border);
@@ -440,4 +427,88 @@ img {
   .right-sidebar {
     display: none;
   }
+}
+ /* =========================
+   CREATE POST FIX (EXACT UI)
+========================= */
+.composer {
+  padding: 18px;
+}
+.composer textarea::placeholder {
+  color: #94a3b8;
+}
+.composer-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.composer textarea {
+  flex: 1;
+  border: none;
+  outline: none;
+  resize: none;
+
+  background: #f5f7fb;
+  border-radius: 999px;
+
+  padding: 10px 16px;
+  font-size: 14px;
+
+  min-height: 44px;  /* FIXED */
+  max-height: 120px;
+}
+
+/* ACTION LAYOUT */
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+/* LEFT SIDE */
+.post-actions-left {
+  display: flex;
+  gap: 12px;
+}
+
+.post-actions-left span,
+.post-actions-left label {
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.post-actions-left span:hover,
+.post-actions-left label:hover {
+  background: #f1f5f9;
+  color: var(--primary);
+}
+
+/* HIDE FILE INPUT */
+.post-actions-left input[type="file"] {
+  display: none;
+}
+
+/* RIGHT SIDE */
+.post-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.post-actions-right select {
+  border: 1px solid var(--border);
+  background: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
 }

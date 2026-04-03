@@ -20,9 +20,9 @@ export default function Header({ user }: any) {
         {/* LOGO */}
         <div className="feed-logo">
           <img
-            src="/assets/images/logo.svg"
-            alt="Buddy Script"
-            style={{ height: 34 }}
+            src="/assets/images/sitelogos.png"
+            alt="SylHUb"
+            style={{ height: 50 }}
           />
         </div>
 

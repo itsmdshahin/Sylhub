@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import Header from "@/components/layout/Header";
 import { getCurrentUser } from "@/src/server/auth/current-user";
+import RightSidebar from "@/components/feed/RightSidebar";
 
 export default async function ProtectedLayout({
   children,
@@ -37,6 +38,8 @@ export default async function ProtectedLayout({
             </ul>
           </div>
 
+
+
           <div className="card sidebar-card">
             <h3>Suggested People</h3>
             <p>Steve Jobs</p>
@@ -50,6 +53,7 @@ export default async function ProtectedLayout({
           {children}
         </section>
 
+      
         {/* RIGHT SIDEBAR */}
         <aside className="right-sidebar">
           <div className="card sidebar-card">
@@ -64,6 +68,8 @@ export default async function ProtectedLayout({
             <p>Ryan Roslansky</p>
             <p>Dylan Field</p>
           </div>
+           
+
         </aside>
       </main>
     </div>
