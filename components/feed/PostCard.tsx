@@ -1,42 +1,160 @@
-export default function PostCard() {
+"use client";
+
+import { useState } from "react";
+
+type Props = {
+  post: any;
+  fullName: (user: any) => string;
+  safeCount: (n?: number) => number;
+  toggleLike: (data: any) => void;
+  addComment: (postId: string, content: string) => void;
+  addReply: (commentId: string, content: string) => void;
+};
+
+export default function PostCard({
+  post,
+  fullName,
+  safeCount,
+  toggleLike,
+  addComment,
+  addReply,
+}: Props) {
+  const [commentText, setCommentText] = useState("");
+
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4">
+    <div className="card post-card">
 
       {/* HEADER */}
-      <div className="flex items-center gap-3 mb-3">
-        <img src="/avatar.png" className="w-10 h-10 rounded-full" />
-        <div>
-          <p className="font-medium text-sm">Karim Saif</p>
-          <p className="text-xs text-gray-500">5 minute ago . Public</p>
+      <div className="post-head">
+        <div className="post-user">
+          <div className="feed-avatar" />
+          <div className="meta">
+            <strong>{fullName(post.user)}</strong>
+            <span>
+              {new Date(post.createdAt).toLocaleString()} •{" "}
+              {post.visibility === "PUBLIC" ? "🌍 Public" : "🔒 Private"}
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* TEXT */}
-      <p className="text-sm mb-3">-Healthy Tracking App</p>
+      {/* CONTENT */}
+      <p style={{ marginTop: 10 }}>{post.content}</p>
 
       {/* IMAGE */}
-      <img src="/post.jpg" className="rounded-lg mb-3" />
+      {post.imageUrl && (
+        <div className="post-image">
+          <img src={post.imageUrl} />
+        </div>
+      )}
 
       {/* STATS */}
-      <div className="flex justify-between text-xs text-gray-500 mb-3">
-        <span>9+ reactions</span>
-        <span>12 Comment 122 Share</span>
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        fontSize: 13,
+        color: "#64748b",
+        marginTop: 10,
+      }}>
+        <span>{safeCount(post._count.likes)} reactions</span>
+        <span>{safeCount(post._count.comments)} comments</span>
       </div>
 
       {/* ACTIONS */}
-      <div className="flex justify-around border-t pt-3 text-sm text-gray-600">
-        <button>Haha</button>
-        <button>Comment</button>
-        <button>Share</button>
+      <div className="post-actions">
+        <button
+          className="icon-btn"
+          onClick={() => toggleLike({ postId: post.id })}
+        >
+          👍 Like
+        </button>
+
+        <button className="icon-btn">
+          💬 Comment
+        </button>
+
+        <button className="icon-btn">
+          ↗ Share
+        </button>
       </div>
 
-      {/* COMMENT INPUT */}
-      <div className="mt-3">
+      {/* COMMENTS LIST */}
+      {post.comments.map((comment: any) => (
+        <div key={comment.id} style={{ marginTop: 10, marginLeft: 10 }}>
+          <p>
+            <b>{fullName(comment.user)}</b>: {comment.content}
+          </p>
+
+          <button
+            className="icon-btn"
+            onClick={() => toggleLike({ commentId: comment.id })}
+          >
+            Like ({safeCount(comment._count.likes)})
+          </button>
+
+          {/* REPLIES */}
+          {comment.replies.map((reply: any) => (
+            <div key={reply.id} style={{ marginLeft: 20 }}>
+              <p>
+                <b>{fullName(reply.user)}</b>: {reply.content}
+              </p>
+
+              <button
+                className="icon-btn"
+                onClick={() => toggleLike({ replyId: reply.id })}
+              >
+                Like ({safeCount(reply._count.likes)})
+              </button>
+            </div>
+          ))}
+
+          {/* REPLY BOX */}
+          <ReplyBox onSubmit={(text) => addReply(comment.id, text)} />
+        </div>
+      ))}
+
+      {/* COMMENT BOX */}
+      <div style={{ marginTop: 10 }}>
         <input
-          className="w-full bg-[#F5F5F5] rounded-full px-4 py-2 text-sm outline-none"
-          placeholder="Write a comment"
+          placeholder="Write comment..."
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
         />
+        <button
+          className="icon-btn"
+          onClick={() => {
+            addComment(post.id, commentText);
+            setCommentText("");
+          }}
+        >
+          Comment
+        </button>
       </div>
+
+    </div>
+  );
+}
+
+/* REPLY BOX */
+function ReplyBox({ onSubmit }: { onSubmit: (text: string) => void }) {
+  const [text, setText] = useState("");
+
+  return (
+    <div style={{ marginTop: 6 }}>
+      <input
+        placeholder="Reply..."
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <button
+        className="icon-btn"
+        onClick={() => {
+          onSubmit(text);
+          setText("");
+        }}
+      >
+        Reply
+      </button>
     </div>
   );
 }

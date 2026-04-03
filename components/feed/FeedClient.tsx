@@ -3,7 +3,8 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
-import CreatePost from "./CreatePost"; 
+import CreatePost from "./CreatePost";
+import PostCard from "./PostCard";
 
 type UserLite = {
   id: string;
@@ -207,118 +208,22 @@ export default function FeedClient({
         setVisibility={setVisibility}
         busy={busy}
       />
-      {/* CREATE POST */}
-      <form onSubmit={createPost} className="card composer">
-        <textarea
-          placeholder={`What's on your mind, ${currentUserName}?`}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
 
-        <div className="post-actions">
-
-          <input
-            type="file"
-            onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
-          />
-
-          <select
-            value={visibility}
-            onChange={(e) =>
-              setVisibility(e.target.value as "PUBLIC" | "PRIVATE")
-            }
-          >
-            <option value="PUBLIC">🌍 Public</option>
-            <option value="PRIVATE">🔒 Private</option>
-          </select>
-
-          <button className="primary-btn" type="submit" disabled={busy}>
-            {busy ? "Posting..." : "Post"}
-          </button>
-        </div>
-      </form>
-
-      {/* POSTS */}
       <div className="feed-grid">
         {posts.map((post) => (
-          <div key={post.id} className="card post-card">
-
-            {/* HEADER */}
-            <div className="post-head">
-              <div className="post-user">
-                <div className="feed-avatar" />
-                <div className="meta">
-                  <strong>{fullName(post.user)}</strong>
-                  <span>
-                    {new Date(post.createdAt).toLocaleString()} •{" "}
-                    {post.visibility === "PUBLIC" ? "🌍 Public" : "🔒 Private"}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* CONTENT */}
-            <p>{post.content}</p>
-
-            {/* IMAGE */}
-            {post.imageUrl && (
-              <div className="post-image">
-                <img src={post.imageUrl} />
-              </div>
-            )}
-
-            {/* ACTIONS */}
-            <div className="post-actions">
-              <button
-                className="icon-btn"
-                onClick={() => toggleLike({ postId: post.id })}
-              >
-                👍 {safeCount(post._count.likes)} Likes
-              </button>
-
-              <button className="icon-btn">
-                💬 {safeCount(post._count.comments)} Comments
-              </button>
-            </div>
-
-            {/* COMMENTS */}
-            {post.comments.map((comment) => (
-              <div key={comment.id} style={{ marginTop: 10, marginLeft: 10 }}>
-                <p>
-                  <b>{fullName(comment.user)}</b>: {comment.content}
-                </p>
-
-                <button
-                  className="icon-btn"
-                  onClick={() => toggleLike({ commentId: comment.id })}
-                >
-                  Like ({safeCount(comment._count.likes)})
-                </button>
-
-                {/* REPLIES */}
-                {comment.replies.map((reply) => (
-                  <div key={reply.id} style={{ marginLeft: 20 }}>
-                    <p>
-                      <b>{fullName(reply.user)}</b>: {reply.content}
-                    </p>
-
-                    <button
-                      className="icon-btn"
-                      onClick={() => toggleLike({ replyId: reply.id })}
-                    >
-                      Like ({safeCount(reply._count.likes)})
-                    </button>
-                  </div>
-                ))}
-
-                <ReplyBox onSubmit={(text) => addReply(comment.id, text)} />
-              </div>
-            ))}
-
-            <CommentBox onSubmit={(text) => addComment(post.id, text)} />
-          </div>
+          <PostCard
+            key={post.id}
+            post={post}
+            fullName={fullName}
+            safeCount={safeCount}
+            toggleLike={toggleLike}
+            addComment={addComment}
+            addReply={addReply}
+          />
         ))}
       </div>
+      {/* POSTS */}
+      
     </div>
   );
 }
