@@ -175,7 +175,8 @@ export default async function FeedPage() {
 
   return(
     <> 
-    <FeedClient currentUser={user} initialPosts={posts} />
+      <Stories  />
+      <FeedClient currentUser={user} initialPosts={posts} />
     </>
   ); 
 }

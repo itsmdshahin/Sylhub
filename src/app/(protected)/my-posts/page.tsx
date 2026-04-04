@@ -1,24 +1,27 @@
+// app/my-posts/page.tsx
+
 import { getCurrentUser } from "@/src/server/auth/current-user";
 import { supabaseAdmin } from "@/src/server/db/supabase-admin";
+import MyPostsClient from "@/components/profile/MyPostsClient";
+import { redirect } from "next/navigation";
 
-export default async function MyPosts() {
+export default async function MyPostsPage() {
   const user = await getCurrentUser();
 
-  const { data } = await supabaseAdmin
+  if (!user) {
+    redirect("/login");
+  }
+
+  const { data, error } = await supabaseAdmin
     .from("posts")
     .select("*")
-    .eq("user_id", user?.id)
+    .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
-  return (
-    <div style={{ padding: 20 }}>
-      <h2>My Posts</h2>
+  if (error) {
+    console.error(error);
+    return <div>Failed to load posts</div>;
+  }
 
-      {data?.map((p) => (
-        <div key={p.id} style={{ marginBottom: 16 }}>
-          <p>{p.content}</p>
-        </div>
-      ))}
-    </div>
-  );
+  return <MyPostsClient initialPosts={data || []} />;
 }

@@ -1,24 +1,63 @@
 export default function Stories() {
   return (
-    <div className="flex gap-3 overflow-x-auto">
+    <div className="card" style={{ padding: 16 }}>
+      <div style={{
+        display: "flex",
+        gap: 12,
+        overflowX: "auto"
+      }}>
 
-      {/* YOUR STORY */}
-      <div className="w-[120px] h-[180px] bg-blue-900 rounded-lg flex flex-col justify-end items-center text-white">
-        <div className="mb-4 text-center">
-          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">+</div>
-          <p className="text-xs">Your Story</p>
+        {/* YOUR STORY */}
+        <div style={{
+          width: 120,
+          height: 180,
+          borderRadius: 18,
+          background: "#3b82f6",
+          color: "#fff",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          alignItems: "center"
+        }}>
+          <div style={{ marginBottom: 12, textAlign: "center" }}>
+            <div style={{
+              width: 30,
+              height: 30,
+              borderRadius: "50%",
+              background: "#2563eb",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: 6
+            }}>
+              +
+            </div>
+            <p style={{ fontSize: 12 }}>Your Story</p>
+          </div>
         </div>
+
+        {/* OTHER STORIES */}
+        {[1, 2, 3].map((i) => (
+          <div key={i} style={{
+            width: 120,
+            height: 180,
+            borderRadius: 18,
+            background: "#cbd5f5",
+            position: "relative"
+          }}>
+            <p style={{
+              position: "absolute",
+              bottom: 8,
+              left: 8,
+              fontSize: 12,
+              color: "#fff"
+            }}>
+              User {i}
+            </p>
+          </div>
+        ))}
+
       </div>
-
-      {/* OTHER STORIES */}
-      {[1,2,3].map((i)=>(
-        <div key={i} className="w-[120px] h-[180px] bg-gray-300 rounded-lg relative">
-          <p className="absolute bottom-2 left-2 text-white text-xs">
-            Ryan Roslansky
-          </p>
-        </div>
-      ))}
-
     </div>
   );
 }

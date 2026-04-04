@@ -6,23 +6,35 @@ export default function NotificationDropdown({ children }: any) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="relative">
+    <div style={{ position: "relative" }}>
       <div onClick={() => setOpen(!open)}>{children}</div>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg p-4 z-50">
-          <h4 className="font-semibold mb-3">Notifications</h4>
+        <div
+          style={{
+            position: "absolute",
+            right: 0,
+            marginTop: 10,
+            width: 280,
+            background: "#fff",
+            borderRadius: 16,
+            padding: 16,
+            boxShadow: "0 10px 40px rgba(0,0,0,0.1)",
+            zIndex: 50,
+          }}
+        >
+          <h4 style={{ marginBottom: 12 }}>Notifications</h4>
 
-          <div className="space-y-3 text-sm">
-            <div className="flex gap-2">
-              <img src="/avatar.png" className="w-8 h-8 rounded-full" />
-              <p>
-                <span className="font-medium">Steve Jobs</span> posted a link
-              </p>
-            </div>
-
-            <div className="text-gray-500 text-xs">42 minutes ago</div>
+          <div style={{ display: "flex", gap: 10 }}>
+            <div className="feed-avatar" style={{ width: 32, height: 32 }} />
+            <p style={{ fontSize: 14 }}>
+              <b>Steve Jobs</b> liked your post
+            </p>
           </div>
+
+          <p style={{ fontSize: 12, color: "#64748b", marginTop: 6 }}>
+            2 minutes ago
+          </p>
         </div>
       )}
     </div>

@@ -1,55 +1,66 @@
 export default function LeftSidebar() {
   return (
-    <div className="space-y-4">
+    <div className="left-sidebar">
 
       {/* EXPLORE */}
-      <div className="bg-white p-4 rounded-lg shadow-sm">
-        <p className="font-semibold mb-3">Explore</p>
+      <div className="card sidebar-card">
+        <h3>Explore</h3>
 
-        <div className="space-y-3 text-sm text-gray-600">
-          <p>Learning</p>
-          <p>Insights</p>
-          <p>Find friends</p>
-          <p>Bookmarks</p>
-          <p>Group</p>
-          <p>Gaming</p>
-          <p>Settings</p>
-          <p>Save post</p>
-        </div>
+        <ul>
+          <li>📘 Learning</li>
+          <li>📊 Insights</li>
+          <li>👥 Find Friends</li>
+          <li>🔖 Bookmarks</li>
+          <li>👨‍👩‍👧 Groups</li>
+          <li>🎮 Gaming</li>
+          <li>⚙️ Settings</li>
+          <li>💾 Save Post</li>
+        </ul>
       </div>
 
-      {/* SUGGESTED */}
-      <div className="bg-white p-4 rounded-lg shadow-sm">
-        <p className="font-semibold mb-3">Suggested People</p>
+      {/* SUGGESTED PEOPLE */}
+      <div className="card sidebar-card">
+        <h3>Suggested People</h3>
 
         {["Steve Jobs", "Ryan Roslansky", "Dylan Field"].map((name) => (
-          <div key={name} className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <img src="/avatar.png" className="w-8 h-8 rounded-full" />
+          <div
+            key={name}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 12,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div className="feed-avatar" style={{ width: 32, height: 32 }} />
               <div>
-                <p className="text-sm font-medium">{name}</p>
-                <p className="text-xs text-gray-500">CEO</p>
+                <p style={{ fontSize: 14, fontWeight: 500 }}>{name}</p>
+                <p style={{ fontSize: 12, color: "#64748b" }}>CEO</p>
               </div>
             </div>
 
-            <button className="text-xs border px-2 py-1 rounded">
-              Connect
-            </button>
+            <button className="icon-btn">Connect</button>
           </div>
         ))}
       </div>
 
       {/* EVENTS */}
-      <div className="bg-white p-4 rounded-lg shadow-sm">
-        <p className="font-semibold mb-3">Events</p>
+      <div className="card sidebar-card">
+        <h3>Events</h3>
 
-        <img src="/event.jpg" className="rounded-lg mb-2" />
+        <div style={{ borderRadius: 12, overflow: "hidden", marginBottom: 8 }}>
+          <img src="/event.jpg" />
+        </div>
 
-        <p className="text-sm font-medium">
+        <p style={{ fontSize: 14, fontWeight: 500 }}>
           No more terrorism no more cry
         </p>
 
-        <button className="mt-2 text-xs bg-blue-500 text-white px-3 py-1 rounded">
+        <button
+          className="primary-btn"
+          style={{ marginTop: 8, fontSize: 12, padding: "6px 10px" }}
+        >
           Going
         </button>
       </div>

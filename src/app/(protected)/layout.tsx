@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Header from "@/components/layout/Header";
 import { getCurrentUser } from "@/src/server/auth/current-user";
 import RightSidebar from "@/components/feed/RightSidebar";
+import LeftSidebar from "@/components/feed/LeftSidebar";
 
 export default async function ProtectedLayout({
   children,
@@ -25,27 +26,7 @@ export default async function ProtectedLayout({
       <main className="main-layout">
         {/* LEFT SIDEBAR */}
         <aside className="left-sidebar">
-          <div className="card sidebar-card">
-            <h3>Explore</h3>
-            <ul>
-              <li>📘 Learning</li>
-              <li>📊 Insights</li>
-              <li>👥 Find Friends</li>
-              <li>🔖 Bookmarks</li>
-              <li>👨‍👩‍👧 Groups</li>
-              <li>🎮 Gaming</li>
-              <li>⚙️ Settings</li>
-            </ul>
-          </div>
-
-
-
-          <div className="card sidebar-card">
-            <h3>Suggested People</h3>
-            <p>Steve Jobs</p>
-            <p>Ryan Roslansky</p>
-            <p>Dylan Field</p>
-          </div>
+           <LeftSidebar />
         </aside>
 
         {/* CENTER FEED */}
@@ -56,20 +37,7 @@ export default async function ProtectedLayout({
       
         {/* RIGHT SIDEBAR */}
         <aside className="right-sidebar">
-          <div className="card sidebar-card">
-            <h3>You Might Like</h3>
-            <p>Radovan SkillArena</p>
-            <button className="primary-btn">Follow</button>
-          </div>
-
-          <div className="card sidebar-card">
-            <h3>Your Friends</h3>
-            <p>Steve Jobs</p>
-            <p>Ryan Roslansky</p>
-            <p>Dylan Field</p>
-          </div>
-           
-
+          <RightSidebar /> 
         </aside>
       </main>
     </div>
