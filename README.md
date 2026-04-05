@@ -113,21 +113,21 @@ git clone https://github.com/itsmdshahin/Sylhub.git
 cd Sylhub
 npm install
 ```
-##2️⃣ Install Dependencies 
+###2️⃣ Install Dependencies 
 ```bash
 NEXTAUTH_SECRET=your_secret
 NEXTAUTH_URL=http://localhost:3000
 ```
-## Setup Environment Variables 
+### Setup Environment Variables 
 ```bash
 SUPABASE_URL=your_supabase_url
 SUPABASE_ANON_KEY=your_supabase_key
 ```
-##4️⃣ Run the Application
+###4️⃣ Run the Application
 ```bash
 npm run dev
 ```
-##🧪 Key Implementation Details
+###🧪 Key Implementation Details
 - Authentication:
 Implemented using NextAuth with credential-based login.
 - Protected Routes:
@@ -139,21 +139,21 @@ Supabase is used for storing users, posts, and interactions.
 - Architecture:
 Clean separation between frontend UI and backend logic.
 
-##🚀 Deployment
+###🚀 Deployment
 
 The application is deployed using Vercel.
 
 Live URL:
 👉 https://sylhub.vercel.app/
 
-##📈 Future Improvements
+###📈 Future Improvements
 Real-time notifications
 Chat system (messaging)
 Advanced search functionality
 Media upload optimization
 Role-based access control
 
-##🤝 Acknowledgements
+###🤝 Acknowledgements
 
 This project was developed as part of a technical Project for a Full Stack Developer.
 

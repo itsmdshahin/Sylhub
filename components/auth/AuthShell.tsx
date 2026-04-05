@@ -34,7 +34,7 @@ export default function AuthShell({
 
         <div className="auth-panel" style={{ direction: "ltr" }}>
           <div className="brand">
-            <img src="/assets/images/logo.svg" alt="Buddy Script" />
+            <img src="/assets/images/sitelogos.png" alt="SYL HUB" />
           </div>
 
           <p className="auth-kicker">{kicker}</p>
