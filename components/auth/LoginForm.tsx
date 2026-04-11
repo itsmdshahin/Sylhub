@@ -47,6 +47,7 @@ export default function LoginForm() {
       <div className="field">
         <label>Email</label>
         <input
+          id="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -57,6 +58,7 @@ export default function LoginForm() {
       <div className="field">
         <label>Password</label>
         <input
+          id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

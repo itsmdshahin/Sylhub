@@ -16,9 +16,39 @@ export default function RegisterForm() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
+    
     setError("");
+    if (!firstName.trim()) {
+      setError("First name is required");
+      return;
+    }
 
+    if (!lastName.trim()) {
+      setError("Last name is required");
+      return;
+    }
+
+    if (!email) {
+      setError("Email is required");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Enter a valid email");
+      return;
+    }
+
+    if (!password) {
+      setError("Password is required");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+    setLoading(true);
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
