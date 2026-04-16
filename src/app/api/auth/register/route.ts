@@ -7,7 +7,7 @@ import {
   authCookieOptions,
   createSessionToken,
 } from "@/src/server/auth/session";
-import { rateLimit } from "@/src/server/lib/rate-limit"; // ✅ correct path
+import { rateLimit } from "@/src/lib/rate-limit"; // ✅ correct path
 
 export async function POST(req: Request) {
   try {
