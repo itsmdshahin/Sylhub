@@ -1,4 +1,3 @@
-// src/app/api/auth/login/route.ts
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/src/server/db/supabase-admin";
 import { loginSchema } from "@/src/server/validators/auth";
@@ -8,49 +7,80 @@ import {
   authCookieOptions,
   createSessionToken,
 } from "@/src/server/auth/session";
+import { rateLimit } from "@/src/lib/rate-limit";
+
+// ✅ Dummy hash (prevents timing attack)
+const FAKE_HASH =
+  "$2a$12$C6UzMDM.H6dfI/f/IKcEeO7yY9l9g1p5MNpQe6V1s5q9gK7KzQeK6";
 
 export async function POST(req: Request) {
-  const body = await req.json();
-  const parsed = loginSchema.safeParse(body);
+  try {
+    // ✅ ADD RATE LIMIT HERE (FIRST THING)
+    const ip = req.headers.get("x-forwarded-for") || "unknown";
 
-  if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid login data" }, { status: 400 });
-  }
+    const allowed = rateLimit(ip);
 
-  const { email, password } = parsed.data;
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Too many attempts. Try again later." },
+        { status: 429 }
+      );
+    }
 
-  const { data: user, error } = await supabaseAdmin
-    .from("users")
-    .select("id, first_name, last_name, email, password")
-    .eq("email", email)
-    .maybeSingle();
+    // ⬇️ THEN continue normal flow
+    const body = await req.json();
+    const parsed = loginSchema.safeParse(body);
 
-  if (error || !user) {
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
-  }
+    if (!parsed.success) {
+      return NextResponse.json(
+        { errors: parsed.error.flatten().fieldErrors },
+        { status: 422 }
+      );
+    }
 
-  const ok = await comparePassword(password, user.password);
-  if (!ok) {
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
-  }
+    const { email, password } = parsed.data;
 
-  const token = await createSessionToken({
-    userId: user.id,
-    email: user.email,
-  });
+    const { data: user } = await supabaseAdmin
+      .from("users")
+      .select("id, first_name, last_name, email, password")
+      .eq("email", email)
+      .maybeSingle();
 
-  const res = NextResponse.json(
-    {
-      user: {
-        id: user.id,
-        firstName: user.first_name,
-        lastName: user.last_name,
-        email: user.email,
+    const hash = user?.password || FAKE_HASH;
+    const isValid = await comparePassword(password, hash);
+
+    if (!user || !isValid) {
+      return NextResponse.json(
+        { error: "Invalid credentials" },
+        { status: 401 }
+      );
+    }
+
+    const token = await createSessionToken({
+      userId: user.id,
+      email: user.email,
+    });
+
+    const res = NextResponse.json(
+      {
+        user: {
+          id: user.id,
+          firstName: user.first_name,
+          lastName: user.last_name,
+          email: user.email,
+        },
       },
-    },
-    { status: 200 }
-  );
+      { status: 200 }
+    );
 
-  res.cookies.set(COOKIE_NAME, token, authCookieOptions);
-  return res;
+    res.cookies.set(COOKIE_NAME, token, authCookieOptions);
+
+    return res;
+  } catch (err) {
+    console.error("Login error:", err);
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 }
+    );
+  }
 }
